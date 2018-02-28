@@ -27,6 +27,36 @@ defmodule MuTest do
     ## when
     x = Enum.chunk_every(s, 2, 1, :discard)
     ## then
-    assert Enum.all?(x, &apply(fn (x, y) -> x <= y end, &1))
+    assert Enum.all?(x, fn [x, y] -> x <= y end)
+  end
+
+  test "abs/1 is +ve (or zero) regardles of input's parity" do
+    table = [
+      {-5, 5},
+      {0,  0},
+      {-5, 5}]
+    for {i, o} <- table do
+      assert abs(i) === o
+    end
+  end
+
+  describe "abs/1 is +ve (or zero) regardless of input's parity:" do
+    test "output is +ve when input is -ve" do
+      assert abs(-5) === +5
+    end
+
+    test "output is zero when input is zero" do
+      assert abs(0) === 0
+    end
+
+    test "output is +ve when iput is +ve" do
+      assert abs(+5) === +5
+    end
+  end
+
+  property "abs/1 is +ve regardles of input's parity" do
+    check all i <- integer(), i != 0 do
+      assert abs(i) > 0
+    end
   end
 end
