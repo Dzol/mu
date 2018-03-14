@@ -59,4 +59,16 @@ defmodule MuTest do
       assert abs(i) > 0
     end
   end
+
+  property "abs/1 has same magnitude as argument" do
+    check all i <- integer(), i != 0 do
+      cond do
+        i < 0 ->
+          assert abs(i) + i === 0
+
+        i > 0 ->
+          assert abs(i) + i === 2 * i
+      end
+    end
+  end
 end
