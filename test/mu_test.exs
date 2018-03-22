@@ -9,7 +9,8 @@ defmodule MuTest do
   end
 
   test "a longer sequence" do
-    f = [0,1,1,2,3,5,8,13,21]
+    f = [0, 1, 1, 2, 3, 5, 8, 13, 21]
+
     for {input, output} <- Enum.zip(0..8, f) do
       assert Mu.fibonacci(input) === output
     end
@@ -31,10 +32,8 @@ defmodule MuTest do
   end
 
   test "abs/1 is +ve (or zero) regardles of input's parity" do
-    table = [
-      {-5, 5},
-      {0,  0},
-      {-5, 5}]
+    table = [{-5, 5}, {0, 0}, {+5, 5}]
+
     for {i, o} <- table do
       assert abs(i) === o
     end
