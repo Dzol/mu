@@ -18,6 +18,6 @@ defmodule Mu.Mixfile do
   end
 
   defp deps do
-    [{:stream_data, "~> 0.4"}]
+    [{:stream_data, "~> 0.4.2"}]
   end
 end

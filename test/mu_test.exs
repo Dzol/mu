@@ -70,4 +70,26 @@ defmodule MuTest do
       end
     end
   end
+
+  property "integer/1 bound by run size" do
+
+    x = 100; Application.put_env(:stream_data, :max_runs, x)
+
+    check all i <- integer() do
+      assert i >= -x
+      assert i <= x
+    end
+
+    y = 3_210; Application.put_env(:stream_data, :max_runs, y)
+
+    check all i <- integer() do
+      assert i >= -y
+      assert i <= y
+    end
+
+    check all l <- list_of(integer(), min_length: 1) do
+      assert Enum.min(l) >= -y
+      assert Enum.max(l) <= y
+    end
+  end
 end
