@@ -16,6 +16,42 @@ defmodule MuTest do
     end
   end
 
+  test "abs/1 is positive (or zero) regardless of input's parity" do
+    table = [{-3,3}, {0,0}, {+5,5}]
+    for {input, output} <- table do
+      assert abs(input) === output
+    end
+  end
+
+  property "abs/1 is positive (or zero) regardless of input's parity" do
+    check all i <- integer() do
+      assert abs(0 + i) === abs(0 - i) ## +/-i
+    end
+    check all i <- integer() do
+      assert abs(i) >= 0
+    end
+  end
+
+  # defp negative_integer do
+  #   map(positive_integer(), & -1 * &1)
+  # end
+
+  # property "abs/1 has the same magnitude as input" do
+  #   check all i <- negative_integer() do
+  #     assert abs(i) + i === 0
+  #   end
+  # end
+
+  property "abs/1 has the same magnitude as input" do
+    check all i <- integer() do
+      assert square(abs(i)) === square(i)
+    end
+  end
+
+  defp square x do
+    Kernel.round(:math.pow(x, 2))
+  end
+
   property "fibonacci are positive (or zero)" do
     check all i <- integer(0..15) do
       assert Mu.fibonacci(i) >= 0
@@ -29,6 +65,16 @@ defmodule MuTest do
     x = Enum.chunk_every(s, 2, 1, :discard)
     ## then
     assert Enum.all?(x, fn [x, y] -> x <= y end)
+  end
+
+  test "fibonacci/1 tends toward the Golden Ratio phi/0" do
+    x = 1..32
+    |> Enum.map(&Mu.fibonacci/1) ## [1, 1, 2, 3, 5, ...]
+    |> Enum.chunk_every(2, 1, :discard) ## [[1, 1], [1, 2], [2, 3], ...]
+    |> Enum.map(fn [smaller, bigger] -> bigger / smaller end) ## [1/1, 2/1, 3/2, ...]
+    |> Enum.map(& Kernel.abs(phi() - &1)) ## [0.61, 0.38, 0.11, ...]
+    |> Enum.chunk_every(2, 1, :discard) ## [[0.61, 0.38], [0.38, 0.11], [0.11, 0.04], ...]
+    assert decreasing?(x)
   end
 
   test "abs/1 is +ve (or zero) regardles of input's parity" do
@@ -61,6 +107,10 @@ defmodule MuTest do
 
   property "abs/1 has same magnitude as argument" do
     check all i <- integer(), i != 0 do
+      x = abs(i) + i; assert x === 0 or x === 2 * i
+    end
+
+    check all i <- integer(), i != 0 do
       cond do
         i < 0 ->
           assert abs(i) + i === 0
@@ -91,5 +141,16 @@ defmodule MuTest do
       assert Enum.min(l) >= -y
       assert Enum.max(l) <= y
     end
+  end
+
+  defp phi do
+    x = 1 + :math.sqrt(5); x / 2
+  end
+
+  defp decreasing? x do
+    f = fn [x, y] ->
+      x > y
+    end
+    Enum.all?(x, f)
   end
 end
