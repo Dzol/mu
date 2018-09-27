@@ -121,6 +121,10 @@ defmodule MuTest do
     end
   end
 
+  test "biggest palindromic number that's product of two three-digit numbers" do
+    assert Mu.ProductPalindrome.go() === 906609
+  end
+
   property "integer/1 bound by run size" do
 
     x = 100; Application.put_env(:stream_data, :max_runs, x)
@@ -130,17 +134,17 @@ defmodule MuTest do
       assert i <= x
     end
 
-    y = 3_210; Application.put_env(:stream_data, :max_runs, y)
+    # y = 3_210; Application.put_env(:stream_data, :max_runs, y)
 
-    check all i <- integer() do
-      assert i >= -y
-      assert i <= y
-    end
+    # check all i <- integer() do
+    #   assert i >= -y
+    #   assert i <= y
+    # end
 
-    check all l <- list_of(integer(), min_length: 1) do
-      assert Enum.min(l) >= -y
-      assert Enum.max(l) <= y
-    end
+    # check all l <- list_of(integer(), min_length: 1) do
+    #   assert Enum.min(l) >= -y
+    #   assert Enum.max(l) <= y
+    # end
   end
 
   defp phi do
