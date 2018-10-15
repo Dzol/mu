@@ -2,6 +2,12 @@ defmodule MuTest do
   use ExUnit.Case
   use ExUnitProperties
 
+  test "compile-time sum/1 is like run-time sum/1" do
+    require Mu
+    x = [1,2,3]
+    assert Mu.sum(x) = Enum.sum(x)
+  end
+
   test "first few fibonacci" do
     assert Mu.fibonacci(2) === 1
     assert Mu.fibonacci(3) === 2

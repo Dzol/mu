@@ -1,4 +1,10 @@
 defmodule Mu do
+  defmacro sum(x) do
+    quote do
+      List.foldl(unquote(x), 0, &Kernel.+/2)
+    end
+  end
+
   def fibonacci(x) do
     cond do
       x === 0 ->
